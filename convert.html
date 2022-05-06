@@ -1,0 +1,109 @@
+<html>
+    <head>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    </head>
+    <body>
+        <div class="container">
+            <div class="row mt-5 mb-2">
+                <div class="col">
+                    <h5 style="text-align:center">Convert Number Into Words</h5>
+                    <input type="number" class="form-control" id="number" style="font-size:20px" placeholder="Input your number here">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="alert alert-success" style="font-size:20px">
+                        Terbilang :
+                        <span id="say-number" style="font-style:italic;font-weight:bold"></span>
+                      </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+        <script>
+            convert = (val) => {
+                let lengthVal = val.length
+                let convertSatuan = ['','Satu','Dua','Tiga','Empat','Lima','Enam','Tujuh','Delapan','Sembilan']
+                let units = ['','Puluh','Ratus']
+                let say = []
+                let ind
+                let unit
+                for(ind=0;ind<convertSatuan.length;ind++) {
+                    if(val[ind] == 0) {
+                        unit = ''
+                    } else {
+                        unit = units[lengthVal-(ind+1)]
+                    }
+                    say.push(convertSatuan[val[ind]], unit)
+                    if(lengthVal == 3) {
+                        if(val[lengthVal-2] == 1) {
+                            if(val[lengthVal-1] == 1) {
+                                let belas = 'Sebelas'
+                                say.splice(2,4,belas)
+                            } else if(val[lengthVal-1] == 0) {
+                                let puluh = 'Sepuluh'
+                                say.splice(2,4,puluh)
+                            } else {
+                                let belas = 'Belas'
+                                say.splice(2,4,convertSatuan[val[lengthVal-1]], belas)
+                            }
+                        }
+                    } else if(lengthVal == 2) {
+                        if(val[lengthVal-2] == 1) {
+                            if(val[lengthVal-1] == 1) {
+                                let belas = 'Sebelas'
+                                say.splice(0,4,belas)
+                            } else if(val[lengthVal-1] == 0) {
+                                let puluh = 'Sepuluh'
+                                say.splice(0,4,puluh)
+                            } else {
+                                let belas = 'Belas'
+                                say.splice(0,4,convertSatuan[val[lengthVal-1]], belas)
+                            }
+                        }
+                    }
+                }
+                if(lengthVal == 3) {
+                    if(val[0] == 1) {
+                        say.splice(0,2,'Seratus')
+                    }
+                }
+                return say.join(" ")
+            }
+
+            convertSay = (value) => {
+                let val = parseInt(value).toString().padStart(12,0)
+                let units = ['','Ribu','Juta','Milyar']
+                let unit
+                let slicedVal = []
+                let ind
+                let say = []
+                for(ind=0;ind<(val.length-1);ind+=3) {
+                    slicedVal.push(val.slice(ind, ind+3))
+                }
+                for(ind=0;ind<slicedVal.length;ind++) {
+                    if(slicedVal[ind] == '000') {
+                        unit = ''
+                    } else {
+                        unit = units[slicedVal.length - (ind+1)]
+                    }
+                    say.push(convert(slicedVal[ind]), unit)
+                }
+                if(slicedVal[2] == '001') {
+                    say.splice(4,2, 'Seribu')
+                }
+                return say.join(" ")
+            }
+
+            $('#number').keyup(function() {
+                let number = $(this).val()
+                if(number != "") {
+                    $('#say-number').html(convertSay(number))
+                } else {
+                    $('#say-number').html("")
+                }
+            })
+        </script>
+    </body>
+</html>
